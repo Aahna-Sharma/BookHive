@@ -1,0 +1,225 @@
+﻿@model WebApplication_Project1_Ecommerce.Models.ViewModels.ShoppingCartVM;
+<style>
+    .cart-item {
+        background: #fff;
+        border: 1px solid #eee;
+        transition: 0.2s ease;
+    }
+
+        .cart-item:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+    .product-img {
+        width: 80px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .description {
+        max-width: 500px;
+        line-height: 1.3;
+    }
+
+    .price-line {
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .final-price {
+        color: #16a34a;
+        font-weight: 600;
+        margin-left: 4px;
+    }
+
+    .qty-btn {
+        border: 1px solid #ddd;
+        padding: 5px 10px;
+        border-radius: 6px;
+        color: #555;
+        background: #f9f9f9;
+        transition: 0.2s;
+    }
+
+        .qty-btn:hover {
+            background: #eee;
+        }
+
+    .qty-value {
+        min-width: 20px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .delete-btn {
+        border: 1px solid #f87171;
+        color: #ef4444;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+        }
+</style>
+<form method="get" asp-action="summary" asp-controller="Cart">
+    <br />
+    <div class="backgroundWhiteBorder">
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-dark text-light ml-0 row container">
+                    <div class="col-6">
+                        <i class="fa-solid fa-cart-shopping"></i> &nbsp;
+                        Shopping Cart
+                    </div>
+                    <div class="col-6 text-right">
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">Continue Shopping</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <input type="checkbox" id="selectAll" checked />
+                        <label for="selectAll"><strong>Select All</strong></label>
+                    </div>
+                    @foreach (var list in Model.ListCart)
+                    {
+                        <div class="cart-item d-flex align-items-center p-3 mb-3 rounded">
+
+                            <!-- Checkbox -->
+                            <div class="me-3">
+                                <input type="checkbox"
+                                       name="selectedItems"
+                                       value="@list.Id"
+                                       class="item-checkbox form-check-input"
+                                       data-price="@list.Price"
+                                       data-count="@list.Count"
+                                       checked />
+                            </div>
+
+                            <!-- Image -->
+                            <div class="me-3">
+                                <img src="@list.Product.ImageUrl"
+                                     class="product-img" />
+                            </div>
+
+                            <!-- Info -->
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 fw-semibold">@list.Product.Title</h6>
+
+                                <p class="text-muted small mb-1 description">
+                                    @Html.Raw(@list.Product.Description)
+                                </p>
+
+                                <div class="price-line">
+                                    $@list.Price × @list.Count =
+                                    <span class="final-price">$@(list.Price * list.Count)</span>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="d-flex align-items-center gap-2">
+
+                                <a asp-action="Minus" asp-route-id="@list.Id"
+                                   class="qty-btn">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+
+                                <span class="qty-value">@list.Count</span>
+
+                                <a asp-action="Plus" asp-route-id="@list.Id"
+                                   class="qty-btn">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+
+                                <a asp-action="delete" asp-route-id="@list.Id"
+                                   class="delete-btn ms-2">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+                        <hr>
+                    }
+                    
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 pr-4">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <span class="text-info" style="font-size:18px;"> Total (USD)</span>
+                                    <strong class="text-info font-weight-bold" style="font-size:18px;">$ <span id="txtOrderTotal">@Model.OrderHeader.OrderTotal</span></strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-footer row">
+
+                        <div class="col-sm-12 col-lg-4 col-md-6 offset-lg-8 offset-md-6 ">
+
+                            <button type="submit" asp-action="summary" class="btn btn-success form-control">
+                                Summary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        function updateTotal() {
+            let total = 0;
+
+            $('.item-checkbox:checked').each(function () {
+                let price = parseFloat($(this).data('price'));
+                let count = parseInt($(this).data('count'));
+
+                total += price * count;
+            });
+
+            $('#txtOrderTotal').text(total.toFixed(2));
+        }
+
+        $(document).ready(function () {
+
+            // ✅ Select All toggle
+            $('#selectAll').change(function () {
+                $('.item-checkbox').prop('checked', this.checked);
+                updateTotal();
+            });
+                    $('form').submit(function () {
+            if ($('.item-checkbox:checked').length === 0) {
+                alert("Please select at least one item");
+                return false; // 🚫 stop form submit
+            }
+        });
+
+            // ✅ Individual checkbox change
+            $('.item-checkbox').change(function () {
+
+                // If any unchecked → uncheck Select All
+                if (!this.checked) {
+                    $('#selectAll').prop('checked', false);
+                }
+
+                // If all checked → check Select All
+                if ($('.item-checkbox:checked').length === $('.item-checkbox').length) {
+                    $('#selectAll').prop('checked', true);
+                }
+
+                updateTotal();
+            });
+
+            // Initial total
+            updateTotal();
+        });
+    </script>
+}

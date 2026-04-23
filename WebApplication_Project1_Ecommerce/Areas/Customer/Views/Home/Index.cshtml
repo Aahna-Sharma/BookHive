@@ -1,0 +1,122 @@
+﻿@model IEnumerable<WebApplication_Project1_Ecommerce.Models.Product>
+
+<!-- 🔍 FILTER CONTROLS -->
+<div class="row mb-4 p-4 m-3">
+
+    <div class="col-md-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search books..." />
+    </div>
+
+    <div class="col-md-3">
+        <select id="sortSelect" class="form-control">
+            <option value="">Sort By</option>
+            <option value="priceAsc">Price: Low → High</option>
+            <option value="priceDesc">Price: High → Low</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+        </select>
+    </div>
+    <div class="col-md-5">
+        <button class="btn btn-outline-primary price-filter" data-max="10">Under $10</button>
+        <button class="btn btn-outline-primary price-filter" data-max="20">Under $20</button>
+        <button class="btn btn-outline-primary price-filter" data-max="50">Under $50</button>
+    </div>
+</div>
+
+<!-- 🧱 PRODUCT GRID -->
+<div id="productContainer" class="row">
+
+    @foreach (var product in Model)
+    {
+        <div class="col-lg-3 col-md-6 product-item"
+             data-title="@product.Title.ToLower()"
+             data-author="@product.Author.ToLower()"
+             data-price="@product.Price100">
+
+            <div class="p-2">
+                <div class="card product-card p-2">
+
+                    <img src="@product.ImageUrl" class="card-img-top rounded" />
+
+                    <div class="pl-1">
+                        <p class="h5"><b>@product.Title</b></p>
+                        <p class="text-primary">by @product.Author</p>
+                    </div>
+
+                    <p>List Price: <strike>$@product.ListPrice.ToString("0.00")</strike></p>
+                    <p style="color:maroon">$@product.Price100.ToString("0.00")</p>
+
+                    <a asp-action="Details"
+                       asp-route-id="@product.Id"
+                       class="btn btn-primary form-control">
+                        Details
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // 🔍 FILTER FUNCTION
+            function filterProducts(maxPrice = Infinity) {
+                let search = $('#searchInput').val().toLowerCase();
+
+                $('.product-item').each(function () {
+                    let title = $(this).data('title');
+                    let author = $(this).data('author');
+                    let price = parseFloat($(this).data('price'));
+
+                    let matchSearch = title.includes(search) || author.includes(search);
+                    let matchPrice = price <= maxPrice;
+
+                    $(this).toggle(matchSearch && matchPrice);
+                });
+            }
+
+            // 🔍 Search
+            $('#searchInput').on('keyup', function () {
+                filterProducts();
+            });
+
+            // 💰 Price buttons
+            $('.price-filter').click(function () {
+                let max = $(this).data('max');
+                filterProducts(max);
+            });
+
+            // 🔃 Sorting
+            $('#sortSelect').on('change', function () {
+                let items = $('.product-item').get();
+                let sort = $(this).val();
+
+                items.sort(function (a, b) {
+                    let priceA = parseFloat($(a).data('price'));
+                    let priceB = parseFloat($(b).data('price'));
+
+                    let titleA = $(a).data('title');
+                    let titleB = $(b).data('title');
+
+                    let authorA = $(a).data('author');
+                    let authorB = $(b).data('author');
+
+                    if (sort === "priceAsc") return priceA - priceB;
+                    if (sort === "priceDesc") return priceB - priceA;
+                    if (sort === "title") return titleA.localeCompare(titleB);
+                    if (sort === "author") return authorA.localeCompare(authorB);
+
+                    return 0;
+                });
+
+                $('#productContainer').html(items);
+            });
+
+        });
+    </script>
+}

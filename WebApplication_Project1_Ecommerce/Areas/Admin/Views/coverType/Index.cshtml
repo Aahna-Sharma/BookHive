@@ -1,0 +1,24 @@
+﻿<div class="row p-2">
+    <div class="col-9">
+        <h2 class="text-primary">Cover Type List</h2>
+    </div>
+    <div class="col-3">
+        <a asp-action="Upsert" class="btn btn-info form-control">
+            <i class="fas fa-plus"></i>&nbsp;Add New Cover Type
+        </a>
+    </div>
+    <div class="container rounded border p-2 m-2">
+        <table id="tbldata2" class="table table-bordered table-striped table-active">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/coverType.js"></script>
+}
