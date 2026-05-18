@@ -1,131 +1,510 @@
 ﻿@using Microsoft.Extensions.Options
 @model WebApplication_Project1_Ecommerce.Models.ViewModels.ShoppingCartVM;
 @inject IOptions<WebApplication_Project1_Ecommerce.Utility.StripeSettings> stripe;
-<form method="post">
-    <br />
-    <div class="backgroundWhiteBorder">
-        <div class="container">
-            <div class="card">
-                <div class="card-header bg-dark text-light ml-0 row container">
-                    <div class="col-6">
-                        <i class="fa-solid fa-cart-shopping"></i> &nbsp;
-                        Order Summary
-                    </div>
-                    <div class="col-6 text-right">
-                        <a asp-action="Index" class="btn btn-outline-info btn-sm">Back to Cart</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="container rounded p-2">
-                        <div class="row">
-                            <div class="col-12 col-lg-6 pb-4">
-                                <div class="row">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-info">PickUp Details:</span>
-                                    </h4>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Name</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.Name" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Phone</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.PhoneNumber" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Street Address</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.StreetAddress" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>City</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.City" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>State</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.State" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Postal Code</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" asp-for="@Model.OrderHeader.PostalCode" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-5 offset-lg-1">
-                                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-info">Order Summary:</span>
-                                </h4>
-                                <ul class="list-group mb-3">
-                                 @foreach (var list in Model.ListCart)
-                                        {
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <div>
-                                                <h6 class="my-0">@list.Product.Title</h6>
-                                                <small class="text-muted">Quantity: @list.Count</small>
-                                            </div>
-                                            <span class="text-muted">$ @(list.Price * list.Count)</span>
-                                        </li>
-                                      
-                                        }
-                                    <li class="list-group-item d-flex justify-content-between bg-light">
-                                        <small class="text-info">Total (USD)</small>
-                                        <strong class="text-info">$ @Model.OrderHeader.OrderTotal</strong>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-12 col-md-8 pt-2">
-                            <p style="color:maroon; font-size:14px;">Estimate Arrival Date: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
-                        </div>
-                        <div class="col-12 col-md-4">
-                                @{
-                                    var OrderTotalAmount = Model.OrderHeader.OrderTotal * 100;
-                                }
-                            <script src="https://checkout.stripe.com/checkout.js"
-                                    class="stripe-button"
-                                    data-key="@stripe.Value.Publishablekey"
-                                    data-amount="@OrderTotalAmount"
-                                    data-name="BookHive"
-                                    data-description="Get Book For Testing"
-                                    data-locale="auto"
-                                    data-allow-remember-me="false"
-                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
-                            </script>
-                            <script>
-                                var el = document.getElementsByClassName("stripe-button-el");
-                                el[0].style.display="none";
-                            </script>
-                            <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
-                        </div>
-                    </div>
+
+@{
+    var savedAddresses = ViewBag.SavedAddresses as List<string> ?? new List<string>();
+    var orderTotalAmount = Model.OrderHeader.OrderTotal * 100;
+}
+
+<style>
+    body {
+        background: #f6f7fb;
+    }
+
+    .checkout-summary {
+        min-height: 100vh;
+        padding: 0px 0;
+    }
+
+    .main-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 22px;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0;
+    }
+
+    .top-bar {
+        padding: 28px 32px 20px 32px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .section-card {
+        background: #ffffff;
+        border: 1px solid #f2f2f2;
+        border-radius: 18px;
+        padding: 24px;
+        height: 100%;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 20px;
+    }
+
+    .address-tools {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+        .address-tools select {
+            flex: 1;
+            min-width: 250px;
+        }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid #dcdfe4;
+        font-size: 14px;
+        padding: 10px 14px;
+        box-shadow: none !important;
+    }
+
+        .form-control:focus {
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(17,24,39,0.04) !important;
+        }
+
+    .summary-item {
+        padding: 14px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+    .book-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .book-meta {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .price-text {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .total-box {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 18px;
+        margin-top: 18px;
+    }
+
+    .total-label {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .total-price {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .footer-bar {
+        padding: 24px 32px 30px;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    .arrival-text {
+        font-size: 14px;
+        color: #6b7280;
+        margin-top: 12px;
+    }
+
+    .back-btn {
+        border-radius: 12px;
+        padding: 12px 80px;
+        font-weight: 500;
+        border: 2px solid #132238;
+        color: #132238;
+        font-size: 16px;
+        margin-right: 17px;
+    }
+
+    .place-order-btn {
+        height: 48px;
+        border-radius: 12px;
+        padding: 10px 100px;
+        font-weight: 600;
+        font-size: 15px;
+        box-shadow: 0 8px 20px rgba(25,135,84,0.18);
+        font-size:17px;
+        margin-right:30px;
+    }
+
+    @@media (max-width: 768px) {
+        .top-bar,
+        .footer-bar {
+            padding: 22px;
+        }
+
+        .address-tools {
+            flex-direction: column;
+        }
+
+            .address-tools select,
+            .address-tools button {
+                width: 100%;
+            }
+
+        .page-title {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<form method="post" class="checkout-summary">
+
+    <div class="container">
+        <div class="card main-card">
+
+            <!-- HEADER -->
+            <div class="top-bar">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <h2 class="page-title">
+                        <i class="fa-solid fa-cart-shopping me-2"></i>
+                        Checkout
+                    </h2>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-dark back-btn">
+                        <i class="fa-solid fa-cart-shopping"></i> &nbsp; Back to Cart
+                    </a>
                 </div>
             </div>
+
+            <!-- BODY -->
+            <div class="card-body p-4">
+                <div class="row g-4">
+
+                    <!-- LEFT SIDE -->
+                    <div class="col-lg-7">
+
+                        <div class="section-card">
+
+                            <div class="section-title">
+                                Pickup Details
+                            </div>
+
+                            <!-- Address tools -->
+                            <div class="address-tools">
+
+                                <select id="savedAddressSelect"
+                                        class="form-control">
+                                    <option value="">
+                                        Select saved address
+                                    </option>
+
+                                    @foreach (var address in savedAddresses)
+                                    {
+                                        var parts = address.Split('|');
+
+                                        <option value="@address">
+                                            @parts[0],
+                                            @parts.ElementAtOrDefault(1),
+                                            @parts.ElementAtOrDefault(2)
+                                            @parts.ElementAtOrDefault(3)
+                                        </option>
+                                    }
+                                </select>
+
+                                <button type="button"
+                                        id="useLocationButton"
+                                        class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-location-crosshairs me-1"></i>
+                                    Use Current Location
+                                </button>
+
+                            </div>
+
+                            <!-- Form -->
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input asp-for="@Model.OrderHeader.Name"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input asp-for="@Model.OrderHeader.PhoneNumber"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Street Address</label>
+                                <input asp-for="@Model.OrderHeader.StreetAddress"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input asp-for="@Model.OrderHeader.City"
+                                           class="form-control" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">State</label>
+                                    <input asp-for="@Model.OrderHeader.State"
+                                           class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <label class="form-label">Postal Code</label>
+                                <input asp-for="@Model.OrderHeader.PostalCode"
+                                       class="form-control" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- RIGHT SIDE -->
+                    <div class="col-lg-5">
+
+                        <div class="section-card">
+
+                            <div class="section-title">
+                                Order Summary
+                            </div>
+
+                            @foreach (var list in Model.ListCart)
+                            {
+                                <input type="hidden"
+                                       name="selectedItems"
+                                       value="@list.Id" />
+
+                                <div class="summary-item d-flex justify-content-between align-items-start">
+
+                                    <div>
+                                        <div class="book-title">
+                                            @list.Product.Title
+                                        </div>
+
+                                        <div class="book-meta">
+                                            Quantity: @list.Count
+                                        </div>
+                                    </div>
+
+                                    <div class="price-text">
+                                        $@((list.Price * list.Count).ToString("0.00"))
+                                    </div>
+
+                                </div>
+                            }
+
+                            <div class="total-box">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="total-label">
+                                        Total (USD)
+                                    </div>
+
+                                    <div class="total-price">
+                                        $@Model.OrderHeader.OrderTotal.ToString("0.00")
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer-bar">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <div class="arrival-text text-danger"><b>
+                            Estimated Arrival:
+                            @DateTime.Now.AddDays(7).ToShortDateString()
+                            to
+                            @DateTime.Now.AddDays(14).ToShortDateString()
+                    </b>
+                       
+                    </div>
+
+                    <button type="button"
+                            id="placeOrderButton"
+                            class="btn btn-success place-order-btn">
+                        Place Order &nbsp; <i class="fa-solid fa-bag-shopping me-2"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
+
 </form>
+
+@section Scripts {
+
+    <script>
+        function fillAddress(street, city, state, postalCode) {
+            $('#OrderHeader_StreetAddress').val(street || '');
+            $('#OrderHeader_City').val(city || '');
+            $('#OrderHeader_State').val(state || '');
+            $('#OrderHeader_PostalCode').val(postalCode || '');
+        }
+
+        $('#savedAddressSelect').on('change', function () {
+            if (!this.value) return;
+
+            var parts = this.value.split('|');
+            fillAddress(parts[0], parts[1], parts[2], parts[3]);
+        });
+
+        $('#useLocationButton').on('click', function () {
+            var button = $(this);
+
+            if (!navigator.geolocation) {
+                toastr.warning('Geolocation is not supported by this browser.');
+                return;
+            }
+
+            button.prop('disabled', true)
+                .html('<i class="fa-solid fa-spinner fa-spin"></i> Locating...');
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
+
+                    fetch(url, {
+                        headers: {
+                            'Accept-Language': 'en'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            var address = data.address || {};
+
+                            var street = [
+                                address.house_number,
+                                address.road ||
+                                address.neighbourhood ||
+                                address.suburb ||
+                                address.residential
+                            ].filter(Boolean).join(' ');
+
+                            var city =
+                                address.city ||
+                                address.town ||
+                                address.village ||
+                                address.municipality ||
+                                address.county ||
+                                "";
+
+                            var state =
+                                address.state ||
+                                address.state_district ||
+                                "";
+
+                            var postalCode =
+                                address.postcode ||
+                                "";
+
+                            if (!street) {
+                                street = data.display_name || "";
+                            }
+
+                            fillAddress(street, city, state, postalCode);
+
+                            toastr.success(
+                                'Location detected. Please verify before placing the order.'
+                            );
+                        })
+                        .catch(function () {
+                            toastr.warning(
+                                'Unable to fetch address from your location.'
+                            );
+                        })
+                        .finally(function () {
+                            button.prop('disabled', false)
+                                .html('<i class="fa-solid fa-location-crosshairs me-1"></i> Use Current Location');
+                        });
+                },
+
+                function () {
+                    toastr.warning(
+                        'Location permission denied or unavailable.'
+                    );
+
+                    button.prop('disabled', false)
+                        .html('<i class="fa-solid fa-location-crosshairs me-1"></i> Use Current Location');
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        });
+
+        document.getElementById("placeOrderButton")
+            .addEventListener("click", function () {
+
+                var stripeButton =
+                    document.getElementsByClassName("stripe-button-el");
+
+                if (stripeButton.length > 0) {
+                    stripeButton[0].click();
+                } else {
+                    document.querySelector(".checkout-summary").submit();
+                }
+            });
+    </script>
+
+    <script src="https://checkout.stripe.com/checkout.js"
+            class="stripe-button"
+            data-key="@stripe.Value.Publishablekey"
+            data-amount="@orderTotalAmount"
+            data-name="BookHive"
+            data-description="Get Book For Testing"
+            data-locale="auto"
+            data-allow-remember-me="false"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+    </script>
+
+    <script>
+        var el = document.getElementsByClassName("stripe-button-el");
+        if (el.length > 0) {
+            el[0].style.display = "none";
+        }
+    </script>
+
+}

@@ -1,8 +1,5 @@
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
-using Microsoft.EntityFrameworkCore.Metadata;
 using System.Diagnostics;
 using System.Security.Claims;
 using WebApplication_Project1_Ecommerce.DataAccess.Repository.IRepository;
@@ -15,6 +12,7 @@ namespace WebApplication_Project1_Ecommerce.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public HomeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -22,32 +20,34 @@ namespace WebApplication_Project1_Ecommerce.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            if(claims 
-                != null)
-            {
-                var count = _unitOfWork.ShoppingCartRepository.GetAll
-                    (sc => sc.ApplicationUserId == claims.Value).ToList().Count;
-                HttpContext.Session.SetInt32(SD.Ss_CartSessionCount, count);
-            }
-            var productList = _unitOfWork.ProductRepository.GetAll();
+            RefreshCartSessionCount();
+
+            var productList = _unitOfWork.ProductRepository.GetAll().ToList();
+
+            var soldCounts = _unitOfWork.OrderDetailRepository
+                .GetAll(includeProperties: "OrderHeader")
+                .Where(od => od.OrderHeader != null &&
+                    od.OrderHeader.PaymentStatus == SD.PaymentStatusApproved &&
+                    od.OrderHeader.OrderStatus != SD.OrderStatusCancelled &&
+                    od.OrderHeader.OrderStatus != SD.OrderStatusRefunded)
+                .GroupBy(od => od.ProductId)
+                .ToDictionary(g => g.Key, g => g.Sum(od => od.Count));
+
+            ViewBag.SoldCounts = soldCounts;
+            ViewBag.PopularProductIds = soldCounts
+                .OrderByDescending(sc => sc.Value)
+                .Take(4)
+                .Select(sc => sc.Key)
+                .ToHashSet();
+
             return View(productList);
         }
 
         
         public IActionResult Details(int id)
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            if (claims
-                != null)
-            {
-                var count = _unitOfWork.ShoppingCartRepository.GetAll
-                    (sc => sc.ApplicationUserId == claims.Value).ToList().Count;
-                HttpContext.Session.SetInt32(SD.Ss_CartSessionCount, count);
-            }
-            ///****
+            RefreshCartSessionCount();
+
             var productInDb = _unitOfWork.ProductRepository.FirstOrDefault(p => p.Id == id, 
                 includeProperties: "Category,coverType");
             if (productInDb == null) return NotFound();
@@ -86,13 +86,13 @@ namespace WebApplication_Project1_Ecommerce.Areas.Customer.Controllers
             }
             else
             {
-                var productInDb = _unitOfWork.ProductRepository.FirstOrDefault(p => p.Id == shoppingCart.Id,
+                var productInDb = _unitOfWork.ProductRepository.FirstOrDefault(p => p.Id == shoppingCart.ProductId,
                 includeProperties: "Category,coverType");
                 if (productInDb == null) return NotFound();
                 var shoppingCartEdit = new ShoppingCart()
                 {
                     Product = productInDb,
-                    ProductId = shoppingCart.Id,
+                    ProductId = shoppingCart.ProductId,
                 };
 
                 return View(shoppingCartEdit);
@@ -109,6 +109,23 @@ namespace WebApplication_Project1_Ecommerce.Areas.Customer.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private void RefreshCartSessionCount()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            var claims = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claims == null)
+            {
+                return;
+            }
+
+            var count = _unitOfWork.ShoppingCartRepository
+                .GetAll(sc => sc.ApplicationUserId == claims.Value)
+                .Count();
+
+            HttpContext.Session.SetInt32(SD.Ss_CartSessionCount, count);
         }
     }
 }

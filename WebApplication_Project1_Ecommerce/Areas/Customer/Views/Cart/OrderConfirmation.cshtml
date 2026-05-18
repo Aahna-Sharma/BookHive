@@ -1,15 +1,12 @@
-﻿@model int;
+@model int;
 
-<div class="container row">
-    <div class="col-12 text-center">
-        <h1 class="text-primary text-center">Order Submitted Successfully</h1><br />
-
+<section class="order-confirmation cinema-panel">
+    <div class="confirmation-mark">
+        <i class="fa-solid fa-check"></i>
     </div>
-    <div class="col-12 text-center" style="color:green">
-        <br />
-        Thank you for your Order!<br />
-        We have received your order and we will send a follow up email shortly!
-        
-        Your Order Number is :@Model
-    </div>
-</div>
+    <p class="eyebrow">Order confirmed</p>
+    <h1>Your books are on the way.</h1>
+    <p>Thank you for your order. Your invoice has been emailed with the full order details.</p>
+    <div class="confirmation-number">Order #@Model</div>
+    <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+</section>

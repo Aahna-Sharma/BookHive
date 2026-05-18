@@ -1,14 +1,17 @@
-﻿<div class="row p-2 m-2">
-    <div class="col-9">
-        <h2 class="text-primary">User List</h2>
-    </div>
-    <div class="col-3">
-        <a asp-page="/Account/Register" asp-area="Identity" class="btn btn-info form-control">
-            <i class="fas fa-plus"></i>&nbsp;Add New User
+<section class="admin-page-shell">
+    <div class="admin-page-header">
+        <div>
+            <p class="eyebrow">Member Management</p>
+            <h1>Users</h1>
+            <p>Review customers, roles, company links, and account status.</p>
+        </div>
+        <a asp-page="/Account/Register" asp-area="Identity" class="btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp;Add User
         </a>
     </div>
-    <div class="container rounded border pt-2">
-        <table id="tbldata" class="table table-bordered table-striped table-active">
+
+    <div class="admin-table-card">
+        <table id="tbldata" class="table table-hover admin-data-table w-100">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -21,7 +24,7 @@
             </thead>
         </table>
     </div>
-</div>
+</section>
 
 @section Scripts {
     <script src="~/js/user.js"></script>

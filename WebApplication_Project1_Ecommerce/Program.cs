@@ -70,6 +70,9 @@ builder.Services.AddSession(options =>
 builder.Services.Configure<StripeSettings>
     (builder.Configuration.GetSection("StripeSettings"));
 
+builder.Services.Configure<EmailSettings>
+    (builder.Configuration.GetSection("EmailSettings"));
+
 var app =  builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -85,6 +88,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
 

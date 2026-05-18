@@ -1,122 +1,193 @@
-﻿@model IEnumerable<WebApplication_Project1_Ecommerce.Models.Product>
+@model IEnumerable<WebApplication_Project1_Ecommerce.Models.Product>
 
-<!-- 🔍 FILTER CONTROLS -->
-<div class="row mb-4 p-4 m-3">
+@{
+    var products = Model?.ToList() ?? new List<WebApplication_Project1_Ecommerce.Models.Product>();
+    var soldCounts = ViewBag.SoldCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var popularProductIds = ViewBag.PopularProductIds as HashSet<int> ?? new HashSet<int>();
+    var featured = products.OrderByDescending(product => soldCounts.ContainsKey(product.Id) ? soldCounts[product.Id] : 0).FirstOrDefault()
+        ?? products.FirstOrDefault();
+    var fallbackImage = Url.Content("~" + ProductImageHelper.FallbackProductImageUrl);
+}
 
-    <div class="col-md-4">
-        <input type="text" id="searchInput" class="form-control" placeholder="Search books..." />
+<section class="home-hero">
+    <div class="home-hero-content">
+        <p class="storefront-kicker">BookHive collections</p>
+        <h1>Discover books with a little more electricity.</h1>
+        <p>Browse curated picks, compare prices, and jump into the stories readers are choosing right now.</p>
+        <div class="home-hero-actions">
+            <a href="#productContainer" class="btn btn-warning">Explore Books</a>
+            <span>@products.Count book@(products.Count == 1 ? "" : "s") available</span>
+        </div>
     </div>
 
-    <div class="col-md-3">
-        <select id="sortSelect" class="form-control">
-            <option value="">Sort By</option>
-            <option value="priceAsc">Price: Low → High</option>
-            <option value="priceDesc">Price: High → Low</option>
-            <option value="title">Title</option>
-            <option value="author">Author</option>
-        </select>
-    </div>
-    <div class="col-md-5">
-        <button class="btn btn-outline-primary price-filter" data-max="10">Under $10</button>
-        <button class="btn btn-outline-primary price-filter" data-max="20">Under $20</button>
-        <button class="btn btn-outline-primary price-filter" data-max="50">Under $50</button>
-    </div>
-</div>
-
-<!-- 🧱 PRODUCT GRID -->
-<div id="productContainer" class="row">
-
-    @foreach (var product in Model)
+    @if (featured != null)
     {
-        <div class="col-lg-3 col-md-6 product-item"
-             data-title="@product.Title.ToLower()"
-             data-author="@product.Author.ToLower()"
-             data-price="@product.Price100">
+        var featuredImageUrl = ProductImageHelper.NormalizeProductImageUrl(featured.ImageUrl);
 
-            <div class="p-2">
-                <div class="card product-card p-2">
-
-                    <img src="@product.ImageUrl" class="card-img-top rounded" />
-
-                    <div class="pl-1">
-                        <p class="h5"><b>@product.Title</b></p>
-                        <p class="text-primary">by @product.Author</p>
-                    </div>
-
-                    <p>List Price: <strike>$@product.ListPrice.ToString("0.00")</strike></p>
-                    <p style="color:maroon">$@product.Price100.ToString("0.00")</p>
-
-                    <a asp-action="Details"
-                       asp-route-id="@product.Id"
-                       class="btn btn-primary form-control">
-                        Details
-                    </a>
-
-                </div>
+        <div class="featured-book-panel">
+            <span class="featured-label">Featured pick</span>
+            <img src="@Url.Content("~" + featuredImageUrl)" alt="@featured.Title" onerror="this.onerror=null;this.src='@fallbackImage';" />
+            <div>
+                <strong>@featured.Title</strong>
+                <small>by @featured.Author</small>
             </div>
-
         </div>
     }
+</section>
 
+<section class="shop-filter-bar home-filter-bar">
+    <div class="filter-field">
+        <label for="searchInput">Search</label>
+        <input type="text" id="searchInput" class="form-control" placeholder="Title or author" />
+    </div>
+
+    <div class="filter-field">
+        <label for="sortSelect">Sort</label>
+        <select id="sortSelect" class="form-control">
+            <option value="">Featured</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="sold">Most Sold</option>
+        </select>
+    </div>
+
+    <div class="filter-actions" aria-label="Price filters">
+        <button type="button" class="btn btn-outline-primary price-filter active" data-max="">All</button>
+        <button type="button" class="btn btn-outline-primary price-filter" data-max="10">Under $10</button>
+        <button type="button" class="btn btn-outline-primary price-filter" data-max="20">Under $20</button>
+        <button type="button" class="btn btn-outline-primary price-filter" data-max="50">Under $50</button>
+    </div>
+</section>
+
+<div id="productContainer" class="row product-grid">
+    @foreach (var product in products)
+    {
+        var sold = soldCounts.ContainsKey(product.Id) ? soldCounts[product.Id] : 0;
+        var imageUrl = ProductImageHelper.NormalizeProductImageUrl(product.ImageUrl);
+
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item"
+             data-title="@product.Title.ToLower()"
+             data-author="@product.Author.ToLower()"
+             data-price="@product.Price100"
+             data-sold="@sold">
+            <article class="product-card home-product-card h-100">
+                @if (popularProductIds.Contains(product.Id))
+                {
+                    <span class="popular-badge"><i class="fa-solid fa-fire"></i> Popular</span>
+                }
+
+                <div class="product-cover-wrap">
+                    <img src="@Url.Content("~" + imageUrl)" class="product-cover" alt="@product.Title" onerror="this.onerror=null;this.src='@fallbackImage';" />
+                </div>
+
+                <div class="product-card-body">
+                    <p class="product-title">@product.Title</p>
+                    <p class="product-author">by @product.Author</p>
+                </div>
+
+                <div class="product-pricing">
+                    <span class="product-list-price"><strike>$@product.ListPrice.ToString("0.00")</strike></span>
+                    <strong class="product-price">$@product.Price100.ToString("0.00")</strong>
+                </div>
+
+                <div class="product-meta-line">
+                    <span><i class="fa-solid fa-bag-shopping"></i> @sold sold</span>
+                    <span>ISBN @product.ISBN</span>
+                </div>
+
+                <a asp-action="Details"
+                   asp-route-id="@product.Id"
+                   class="btn btn-primary form-control mt-auto">
+                    View Details
+                </a>
+            </article>
+        </div>
+    }
+</div>
+
+<div id="emptyState" class="home-empty-state d-none">
+    <h3>No books matched your filters</h3>
+    <p>Try a different search term or clear the price filter.</p>
 </div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        $(function () {
+            let maxPrice = Infinity;
 
-            // 🔍 FILTER FUNCTION
-            function filterProducts(maxPrice = Infinity) {
-                let search = $('#searchInput').val().toLowerCase();
+            function applyFilters() {
+                const search = $('#searchInput').val().toLowerCase().trim();
+                let visibleCount = 0;
 
                 $('.product-item').each(function () {
-                    let title = $(this).data('title');
-                    let author = $(this).data('author');
-                    let price = parseFloat($(this).data('price'));
+                    const item = $(this);
+                    const title = String(item.data('title'));
+                    const author = String(item.data('author'));
+                    const price = parseFloat(item.data('price'));
+                    const matchesSearch = title.includes(search) || author.includes(search);
+                    const matchesPrice = price <= maxPrice;
+                    const shouldShow = matchesSearch && matchesPrice;
 
-                    let matchSearch = title.includes(search) || author.includes(search);
-                    let matchPrice = price <= maxPrice;
-
-                    $(this).toggle(matchSearch && matchPrice);
+                    item.toggle(shouldShow);
+                    if (shouldShow) {
+                        visibleCount++;
+                    }
                 });
+
+                $('#emptyState').toggleClass('d-none', visibleCount !== 0);
             }
 
-            // 🔍 Search
-            $('#searchInput').on('keyup', function () {
-                filterProducts();
-            });
-
-            // 💰 Price buttons
-            $('.price-filter').click(function () {
-                let max = $(this).data('max');
-                filterProducts(max);
-            });
-
-            // 🔃 Sorting
-            $('#sortSelect').on('change', function () {
-                let items = $('.product-item').get();
-                let sort = $(this).val();
+            function sortProducts(sortBy) {
+                const container = $('#productContainer');
+                const items = $('.product-item').get();
 
                 items.sort(function (a, b) {
-                    let priceA = parseFloat($(a).data('price'));
-                    let priceB = parseFloat($(b).data('price'));
+                    const first = $(a);
+                    const second = $(b);
 
-                    let titleA = $(a).data('title');
-                    let titleB = $(b).data('title');
+                    if (sortBy === 'priceAsc') {
+                        return parseFloat(first.data('price')) - parseFloat(second.data('price'));
+                    }
 
-                    let authorA = $(a).data('author');
-                    let authorB = $(b).data('author');
+                    if (sortBy === 'priceDesc') {
+                        return parseFloat(second.data('price')) - parseFloat(first.data('price'));
+                    }
 
-                    if (sort === "priceAsc") return priceA - priceB;
-                    if (sort === "priceDesc") return priceB - priceA;
-                    if (sort === "title") return titleA.localeCompare(titleB);
-                    if (sort === "author") return authorA.localeCompare(authorB);
+                    if (sortBy === 'title') {
+                        return String(first.data('title')).localeCompare(String(second.data('title')));
+                    }
+
+                    if (sortBy === 'author') {
+                        return String(first.data('author')).localeCompare(String(second.data('author')));
+                    }
+
+                    if (sortBy === 'sold') {
+                        return parseInt(second.data('sold')) - parseInt(first.data('sold'));
+                    }
 
                     return 0;
                 });
 
-                $('#productContainer').html(items);
+                container.append(items);
+            }
+
+            $('#searchInput').on('input', applyFilters);
+
+            $('#sortSelect').on('change', function () {
+                sortProducts($(this).val());
+                applyFilters();
             });
 
+            $('.price-filter').on('click', function () {
+                $('.price-filter').removeClass('active');
+                $(this).addClass('active');
+
+                const selectedMax = $(this).data('max');
+                maxPrice = selectedMax === '' ? Infinity : parseFloat(selectedMax);
+                applyFilters();
+            });
         });
     </script>
 }

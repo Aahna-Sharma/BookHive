@@ -1,49 +1,45 @@
-﻿@model WebApplication_Project1_Ecommerce.Models.Category
+@model WebApplication_Project1_Ecommerce.Models.Category
 
 @{
     var title = Model.Id != 0 ? "Edit Category" : "New Category";
-    var saveUpdate = Model.Id != 0 ? "Update" : "Save";
 }
 
-<form method="post">
-    @if (Model.Id != 0)
-    {
-        <input type="hidden" asp-for="Id" />
-    }
-
-    <div class="col-10 border-bottom">
-        <h2 class="text-center text-primary">@title</h2>
+<section class="admin-page-shell admin-form-shell">
+    <div class="admin-page-header">
+        <div>
+            <p class="eyebrow">Content Management</p>
+            <h1>@title</h1>
+            <p>Keep category names clear so customers can browse the catalogue quickly.</p>
+        </div>
     </div>
 
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form method="post" class="admin-form-card">
+        @if (Model.Id != 0)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
 
-    <div class="col-8">
-        <div class="form-group row p-2 m-2">
-            <div class="col-4">
+        <div class="admin-form-grid">
+            <div class="admin-field admin-field-wide">
                 <label asp-for="Name"></label>
-            </div>
-
-            <div class="col-8">
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
-            
-        <div class="form-group row p-2 m-2">
-            <div class="col-8 offset-4">
-                @if (Model.Id != 0)
-                {
-                    <partial name="_EditAndBackToList" />
-                }
-                else
-                {
-                    <partial name="_CreateAndBackToList" />
-                }
-            </div>
+
+        <div class="admin-form-actions">
+            @if (Model.Id != 0)
+            {
+                <partial name="_EditAndBackToList" />
+            }
+            else
+            {
+                <partial name="_CreateAndBackToList" />
+            }
         </div>
-
     </form>
+</section>
 
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

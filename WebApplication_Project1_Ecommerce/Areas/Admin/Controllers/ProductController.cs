@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using WebApplication_Project1_Ecommerce.DataAccess.Repository;
 using WebApplication_Project1_Ecommerce.DataAccess.Repository.IRepository;
 using WebApplication_Project1_Ecommerce.Models;
 using WebApplication_Project1_Ecommerce.Models.ViewModels;
@@ -17,8 +16,6 @@ namespace WebApplication_Project1_Ecommerce.Areas.Admin.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-
-        private readonly IWebHostEnvironment webHostEnvironment;
         public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -84,12 +81,13 @@ namespace WebApplication_Project1_Ecommerce.Areas.Admin.Controllers
                 {
                     var fileName = Guid.NewGuid().ToString();
                     var extension = Path.GetExtension(files[0].FileName);
-                    var uploads = Path.Combine(webRootPath, @"images\products");
+                    var uploads = Path.Combine(webRootPath, ProductImageHelper.ProductImageFolder);
+                    Directory.CreateDirectory(uploads);
 
                     // delete old file if exists
-                    if (!string.IsNullOrEmpty(existingImageUrl))
+                    if (ProductImageHelper.IsCustomProductImage(existingImageUrl))
                     {
-                        var imagePath = Path.Combine(webRootPath, existingImageUrl.TrimStart('\\'));
+                        var imagePath = ProductImageHelper.GetProductImageFilePath(webRootPath, existingImageUrl);
 
                         if (System.IO.File.Exists(imagePath))
                         {
@@ -101,7 +99,7 @@ namespace WebApplication_Project1_Ecommerce.Areas.Admin.Controllers
                     {
                         files[0].CopyTo(fileStream); //THE SELECTED FILE IS Copied to the fileStream
                     }
-                    productVM.product.ImageUrl = @"\images\products\" + fileName + extension;
+                    productVM.product.ImageUrl = ProductImageHelper.BuildProductImageUrl(fileName + extension);
                     //imageurl that will be saved in db
 
                 }
@@ -160,8 +158,8 @@ namespace WebApplication_Project1_Ecommerce.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Error while deleting" });
             //image delete
             var webRootPath = _webHostEnvironment.WebRootPath;
-            var imagePath = Path.Combine(webRootPath, productInDB.ImageUrl.Trim('\\'));
-            if (System.IO.File.Exists(imagePath))
+            var imagePath = ProductImageHelper.GetProductImageFilePath(webRootPath, productInDB.ImageUrl);
+            if (ProductImageHelper.IsCustomProductImage(productInDB.ImageUrl) && System.IO.File.Exists(imagePath))
             {
                 System.IO.File.Delete(imagePath);
             }

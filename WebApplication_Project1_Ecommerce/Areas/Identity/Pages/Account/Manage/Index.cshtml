@@ -1,27 +1,218 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+<div class="container py-4">
+
+    <!-- Page Heading -->
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">My Profile</h2>
+        <p class="text-muted mb-0">
+            Manage your BookHive account, saved address, and order history.
+        </p>
+    </div>
+
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="row">
+
+        <!-- LEFT SIDE -->
+        <div class="col-lg-8">
+
+            <!-- ACCOUNT INFO -->
+            <div class="card shadow border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">Account Information</h4>
+
+                    <form id="profile-form" method="post">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger"
+                             role="alert">
+                        </div>
+
+                        <!-- Username -->
+                        <div class="mb-4">
+                            <label asp-for="Username"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Username"
+                                   class="form-control form-control-lg"
+                                   disabled />
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-4">
+                            <label asp-for="Input.PhoneNumber"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Input.PhoneNumber"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter your phone number" />
+
+                            <span asp-validation-for="Input.PhoneNumber"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button id="update-profile-button"
+                                    type="submit"
+                                    class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                                Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+
+            <!-- SAVED ADDRESS -->
+            <div class="card shadow border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">Saved Address</h4>
+
+                    @if (Model.UserProfile != null)
+                    {
+                        <div class="border rounded-4 p-3">
+
+                            <h6 class="fw-bold">
+                                @Model.UserProfile.Name
+                            </h6>
+
+                            <p class="text-muted mb-1">
+                                @Model.UserProfile.StreetAddress
+                            </p>
+
+                            <p class="text-muted mb-1">
+                                @Model.UserProfile.City,
+                                @Model.UserProfile.State,
+                                @Model.UserProfile.PostalCode
+                            </p>
+
+                            <p class="text-muted mb-0">
+                                Phone: @Model.Input.PhoneNumber
+                            </p>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            No saved address found.
+                        </p>
+                    }
+
+                </div>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
+
+            <!-- ORDER HISTORY -->
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">Recent Orders</h4>
+
+                    @if (Model.OrderHistory != null && Model.OrderHistory.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var order in Model.OrderHistory)
+                                    {
+                                        <tr>
+                                            <td>#@order.Id</td>
+
+                                            <td>
+                                                @order.OrderDate.ToShortDateString()
+                                            </td>
+
+                                            <td>
+                                                $@order.OrderTotal.ToString("0.00")
+                                            </td>
+
+                                            <td>
+                                                <span class="badge bg-success">
+                                                    @order.OrderStatus
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            No previous orders found.
+                        </p>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold">BookHive Summary</h5>
+
+                    <hr />
+
+                    <div class="mb-3">
+                        <strong>Account Type:</strong>
+                        Customer
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Status:</strong>
+                        <span class="badge bg-success">
+                            Active
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Total Orders:</strong>
+                        @(Model.OrderHistory?.Count ?? 0)
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Saved Address:</strong>
+                        1
+                    </div>
+
+                    <div>
+                        <strong>Support:</strong>
+                        <p class="small text-muted mb-0">
+                            Need help? Contact BookHive support anytime.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>
 

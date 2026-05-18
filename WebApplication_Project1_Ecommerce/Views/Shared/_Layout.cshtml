@@ -1,118 +1,301 @@
 ﻿@using WebApplication_Project1_Ecommerce.Utility
-@inject IHttpContextAccessor httpContextAccessor
+@using WebApplication_Project1_Ecommerce.Models
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor httpContextAccessor
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication_Project1_Ecommerce</title>
+    <title>@ViewData["Title"] - BookHive</title>
     <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication_Project1_Ecommerce.styles.css" asp-append-version="true" />
-    @*CSS REF.*@
+
+    <!-- CSS REF -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
+
 <body>
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-sm navbar-dark shop-navbar">
             <div class="container-fluid">
-                @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApplication_Project1_Ecommerce</a> *@
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Logo -->
+                <a class="navbar-brand fw-bold"
+                   asp-area="Customer"
+                   asp-controller="Home"
+                   asp-action="Index">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                    BookHive
+                </a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.IsInRole(SD.Role_Admin))
-                            {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Content Management</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="coverType" asp-action="Index">Cover Type</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Members Management</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">User</a>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
-                                
-                                </div>
-                            </li>
-                            }
-                        @if(User.IsInRole(SD.Role_Employee))
-                            {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Content Management</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="coverType" asp-action="Index">Cover Type</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                            </div>
-                        </li>
-                            }
 
-                        @if (httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != null 
-                        && httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != 0)
-                            {
-                                var count = httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount);
-                                <li>
-                                    <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link text-white">
-                                        <i class="fas fa-shopping-cart"></i>&nbsp;(@count)
+                <!-- Navbar Content -->
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <!-- Home -->
+                        <li class="nav-item">
+                            <a class="nav-link text-light"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+
+                        <!-- ADMIN -->
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle active"
+                                   data-bs-toggle="dropdown"
+                                   href="#"
+                                   role="button">
+                                    Content Management
+                                </a>
+
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="Category"
+                                       asp-action="Index">
+                                        Category
                                     </a>
-                                </li>
-                            }
-                            else
-                            {
-                            <li>
+
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="coverType"
+                                       asp-action="Index">
+                                        Cover Type
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="Product"
+                                       asp-action="Index">
+                                        Product
+                                    </a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle active"
+                                   data-bs-toggle="dropdown"
+                                   href="#"
+                                   role="button">
+                                    Members Management
+                                </a>
+
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="User"
+                                       asp-action="Index">
+                                        User
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="Company"
+                                       asp-action="Index">
+                                        Company
+                                    </a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="Admin"
+                                   asp-controller="Order"
+                                   asp-action="Index">
+                                    Order Management
+                                </a>
+                            </li>
+                        }
+
+                        <!-- EMPLOYEE -->
+                        @if (User.IsInRole(SD.Role_Employee))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle active"
+                                   data-bs-toggle="dropdown"
+                                   href="#"
+                                   role="button">
+                                    Content Management
+                                </a>
+
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="Category"
+                                       asp-action="Index">
+                                        Category
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="coverType"
+                                       asp-action="Index">
+                                        Cover Type
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                       asp-area="Admin"
+                                       asp-controller="Product"
+                                       asp-action="Index">
+                                        Product
+                                    </a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="Admin"
+                                   asp-controller="Order"
+                                   asp-action="Index">
+                                    Order Management
+                                </a>
+                            </li>
+                        }
+
+                        <!-- CART -->
+                        @if (httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != null
+                        && httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount) != 0)
+                        {
+                            var count = httpContextAccessor.HttpContext.Session.GetInt32(SD.Ss_CartSessionCount);
+
+                            <li class="nav-item">
+                                <a asp-area="Customer"
+                                   asp-controller="Cart"
+                                   asp-action="Index"
+                                   class="nav-link text-white">
+                                    <i class="fas fa-shopping-cart"></i>&nbsp;(@count)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
                                 <a class="nav-link text-white">
                                     <i class="fas fa-shopping-cart"></i>&nbsp;0
                                 </a>
                             </li>
-                            }
-                        </ul>
-                    <partial name="_LoginPartial" />
+                        }
+
+                    </ul>
+
+                    <!-- RIGHT SIDE LOGIN PART -->
+                    <ul class="navbar-nav">
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var identityUser = await UserManager.GetUserAsync(User);
+                            var appUser = identityUser as ApplicationUser;
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Manage/Index"
+                                   title="Manage">
+
+                                    <i class="fa-solid fa-user"></i>
+                                    Hello, @(appUser?.Name ?? identityUser.UserName)
+
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <form class="form-inline"
+                                      asp-area="Identity"
+                                      asp-page="/Account/Logout"
+                                      asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+
+                                    <button type="submit"
+                                            class="nav-link btn btn-link text-light border-0">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Register">
+                                    Register
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Login">
+                                    Login
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container page-shell">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
-            &copy; 2026 - WebApplication_Project1_Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - BookHive -
+            <a asp-area=""
+               asp-controller="Home"
+               asp-action="Privacy">
+                Privacy
+            </a>
         </div>
     </footer>
-    
+
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @*JS REF*@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/js/fontawesome.min.js" integrity="sha512-obFNtQ1JKCrxPBPLmYDUevlriATl5EhvwU3CFtdW/HKOkeAe0bbsyZfHO44/f1QyndrZJ464TQvrRP9ZjyXSSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

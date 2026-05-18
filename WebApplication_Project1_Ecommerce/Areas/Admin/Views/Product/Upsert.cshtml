@@ -1,129 +1,137 @@
-﻿@model WebApplication_Project1_Ecommerce.Models.ViewModels.ProductVM
+@model WebApplication_Project1_Ecommerce.Models.ViewModels.ProductVM
 
 @{
-    var title = Model.product.Id != 0 ? "Edit" : "New";
-    var saveUpdate = Model.product.Id != 0 ? "Update" : "Save";
-
+    var title = Model.product.Id != 0 ? "Edit Product" : "New Product";
+    var imageUrl = ProductImageHelper.NormalizeProductImageUrl(Model.product.ImageUrl);
+    var fallbackImage = Url.Content("~" + ProductImageHelper.FallbackProductImageUrl);
 }
-<div class="text-primary border-bottom">
-    <h2 class="text-primary">@title</h2>
-</div>
-<div class="row">
-    <div class="col-6">
-        <form method="post" enctype="multipart/form-data">
-            @* Multipart for file explorer to upload image *@
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (Model.product.Id != 0)
-            {
-                <input type="hidden" asp-for="@Model.product.Id" />
-            }
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Title"></label>
-                <input asp-for="product.Title" class="form-control" />
-                <span asp-validation-for="product.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Description"></label>
-                <textarea asp-for="product.Description" rows="3" class="form-control"> </textarea>
-                <span asp-validation-for="product.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Author"></label>
-                <input asp-for="product.Author" class="form-control" />
-                <span asp-validation-for="product.Author" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.ISBN"></label>
-                <input asp-for="product.ISBN" class="form-control" />
-                <span asp-validation-for="product.ISBN" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.ListPrice"></label>
-                <input asp-for="product.ListPrice" class="form-control" />
-                <span asp-validation-for="product.ListPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Price"></label>
-                <input asp-for="product.Price" class="form-control" />
-                <span asp-validation-for="product.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Price50"></label>
-                <input asp-for="product.Price50" class="form-control" />
-                <span asp-validation-for="product.Price50" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.Price100"></label>
-                <input asp-for="product.Price100" class="form-control" />
-                <span asp-validation-for="product.Price100" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.ImageUrl"></label>
-                <input type="file" name="files" id="uploadImage" asp-for="product.ImageUrl" class="form-control" />
-                @* <span asp-validation-for="product.ImageUrl" class="text-danger"></span> *@
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.CategoryId"></label>
-                <select asp-for="product.CategoryId" asp-items="@Model.CategoryList" class="form-control"> <option value=""> Select Category</option></select>
-      
-                <span asp-validation-for="product.CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group row p-2 m-2">
-                <label asp-for="product.CoverTypeId"></label>
-                <select asp-for="product.CoverTypeId" asp-items="@Model.coverTypeList" class="form-control"> <option value=""> Select Cover Type</option></select>
-      
-                <span asp-validation-for="product.CoverTypeId" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group row p-2 m-2">
-                <div class="col-8">
-                    @if (Model.product.Id != 0)
-                    {
-                        <partial name="_EditAndBackToList" />
-                    }
-                    else
-                    {
-                        <button type="submit" onclick="return ValData()" class="btn btn-info">
-                            Save
-                        </button>
 
-                        <a asp-action="Index" class="btn btn-success">
-                            Back To List
-                        </a>
-                    }
+<section class="admin-page-shell admin-form-shell">
+    <div class="admin-page-header">
+        <div>
+            <p class="eyebrow">Content Management</p>
+            <h1>@title</h1>
+            <p>Update book metadata, pricing tiers, catalogue grouping, and product imagery.</p>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="admin-form-card product-upsert-form">
+        @if (Model.product.Id != 0)
+        {
+            <input type="hidden" asp-for="product.Id" />
+            <input type="hidden" asp-for="product.ImageUrl" />
+        }
+
+        <div class="product-upsert-grid">
+            <div class="admin-form-grid">
+                <div class="admin-field admin-field-wide">
+                    <label asp-for="product.Title"></label>
+                    <input asp-for="product.Title" class="form-control" />
+                    <span asp-validation-for="product.Title" class="text-danger"></span>
+                </div>
+                <div class="admin-field admin-field-wide">
+                    <label asp-for="product.Description"></label>
+                    <textarea asp-for="product.Description" class="form-control"></textarea>
+                    <span asp-validation-for="product.Description" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.Author"></label>
+                    <input asp-for="product.Author" class="form-control" />
+                    <span asp-validation-for="product.Author" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.ISBN"></label>
+                    <input asp-for="product.ISBN" class="form-control" />
+                    <span asp-validation-for="product.ISBN" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.ListPrice"></label>
+                    <input asp-for="product.ListPrice" class="form-control" />
+                    <span asp-validation-for="product.ListPrice" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.Price"></label>
+                    <input asp-for="product.Price" class="form-control" />
+                    <span asp-validation-for="product.Price" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.Price50"></label>
+                    <input asp-for="product.Price50" class="form-control" />
+                    <span asp-validation-for="product.Price50" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.Price100"></label>
+                    <input asp-for="product.Price100" class="form-control" />
+                    <span asp-validation-for="product.Price100" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.CategoryId"></label>
+                    <select asp-for="product.CategoryId" asp-items="@Model.CategoryList" class="form-control">
+                        <option disabled selected>-- Select Category --</option>
+                    </select>
+                    <span asp-validation-for="product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="admin-field">
+                    <label asp-for="product.CoverTypeId"></label>
+                    <select asp-for="product.CoverTypeId" asp-items="@Model.coverTypeList" class="form-control">
+                        <option disabled selected>-- Select Cover Type --</option>
+                    </select>
+                    <span asp-validation-for="product.CoverTypeId" class="text-danger"></span>
+                </div>
+                <div class="admin-field admin-field-wide">
+                    <label asp-for="product.ImageUrl"></label>
+                    <input type="file" name="files" id="uploadBox" class="form-control" />
                 </div>
             </div>
-        </form>
-    </div>
-    <div class="col-6">
-     @if(Model.product.ImageUrl != null)
-        {
-            <img src="@Model.product.ImageUrl"
-                 class="img-fluid rounded"
-                 style="max-width:250px; height:300px; object-fit:contain;" />
-        }
-    </div>
-</div>
 
+            <aside class="product-preview-card">
+                @if (!string.IsNullOrWhiteSpace(Model.product.ImageUrl))
+                {
+                    <img src="@Url.Content("~" + imageUrl)" alt="@Model.product.Title" onerror="this.onerror=null;this.src='@fallbackImage';" />
+                }
+                else
+                {
+                    <div class="preview-placeholder">No image selected</div>
+                }
+            </aside>
+        </div>
 
-@section Scripts
-{
-    <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdn.tiny.cloud/1/yceb7wqr2ps5v3vunieemb9syejgjl73j210uk6duakmo75e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-        function ValData()
-        {
-            if(document.getElementById("uploadImage").value=="")
+        <div class="admin-form-actions">
+            @if (Model.product.Id != 0)
             {
-                swal("Error", "Please select product Image!!", 'error');
+                <partial name="_EditAndBackToList" />
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" onclick="return ValData()" class="btn btn-info form-control">Save</button>
+                    </div>
+                    <div class="col">
+                        <a class="btn btn-success form-control" asp-action="Index">Back To List</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/8qevhxg7q7xd1sd7gojkyo6toz4umbbsivgjy5ajdeqeu6oc/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'lists link image table code help wordcount',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | code'
+        });
+
+        function ValData() {
+            if (document.getElementById("uploadBox").value == "") {
+                swal("Error", "Please select an image", "error");
                 return false;
             }
             return true;
         }
-        tinymce.init({
-            selector:"textarea",
-            plugins:"lists",
-            menubar:"file edit format"
-        });
     </script>
 }

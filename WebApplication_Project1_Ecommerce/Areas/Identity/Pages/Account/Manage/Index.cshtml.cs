@@ -1,14 +1,19 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿// FINAL CORRECT CODE FOR YOUR PROJECT
+// Since you already have address fields inside ApplicationUser
+// and shipping info inside OrderHeader,
+// you DO NOT need UserAddress model at all.
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+// Use THIS Index.cshtml.cs
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebApplication_Project1_Ecommerce.Models;
+using WebApplication_Project1_Ecommerce.DataAccess.Data;
 
 namespace WebApplication_Project1_Ecommerce.Areas.Identity.Pages.Account.Manage
 {
@@ -16,47 +21,34 @@ namespace WebApplication_Project1_Ecommerce.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationDbContext _db;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _db = db;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string Username { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // REAL ORDER HISTORY
+        public List<OrderHeader> OrderHistory { get; set; } = new();
+
+        // SAVED ADDRESS FROM ApplicationUser
+        public ApplicationUser UserProfile { get; set; }
+
         [TempData]
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
         }
 
@@ -71,14 +63,26 @@ namespace WebApplication_Project1_Ecommerce.Areas.Identity.Pages.Account.Manage
             {
                 PhoneNumber = phoneNumber
             };
+
+            // ORDER HISTORY FROM DATABASE
+            OrderHistory = await _db.OrderHeaders
+                .Where(u => u.ApplicationUserId == user.Id)
+                .OrderByDescending(u => u.OrderDate)
+                .Take(10)
+                .ToListAsync();
+
+            // USER PROFILE + SAVED ADDRESS
+            UserProfile = await _db.ApplicationUsers
+                .FirstOrDefaultAsync(u => u.Id == user.Id);
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound("Unable to load user.");
             }
 
             await LoadAsync(user);
@@ -88,9 +92,10 @@ namespace WebApplication_Project1_Ecommerce.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound("Unable to load user.");
             }
 
             if (!ModelState.IsValid)
@@ -100,18 +105,22 @@ namespace WebApplication_Project1_Ecommerce.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                var result = await _userManager
+                    .SetPhoneNumberAsync(user, Input.PhoneNumber);
+
+                if (!result.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Error updating phone number.";
                     return RedirectToPage();
                 }
             }
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
+
             return RedirectToPage();
         }
     }

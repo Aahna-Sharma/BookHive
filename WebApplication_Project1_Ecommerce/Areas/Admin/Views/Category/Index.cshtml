@@ -1,14 +1,17 @@
-﻿<div class="row p-2">
-    <div class="col-9">
-        <h2 class="text-primary">Category List</h2>
-    </div>
-    <div class="col-3">
-        <a asp-action="Upsert" class="btn btn-info form-control">
-            <i class="fas fa-plus"></i>&nbsp;Add New Category
+<section class="admin-page-shell">
+    <div class="admin-page-header">
+        <div>
+            <p class="eyebrow">Content Management</p>
+            <h1>Categories</h1>
+            <p>Organize books into browsing sections customers can scan quickly.</p>
+        </div>
+        <a asp-action="Upsert" class="btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp;Add Category
         </a>
     </div>
-    <div class="container rounded border p-2 m-2">
-        <table id="tbldata" class="table table-bordered table-striped table-active">
+
+    <div class="admin-table-card">
+        <table id="tbldata" class="table table-hover admin-data-table w-100">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -17,8 +20,8 @@
             </thead>
         </table>
     </div>
-</div>
+</section>
 
-@section Scripts{
+@section Scripts {
     <script src="~/js/Category.js"></script>
 }

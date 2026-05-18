@@ -1,0 +1,71 @@
+@model WebApplication_Project1_Ecommerce.Models.ViewModels.OrderManagementVM
+
+@{
+    ViewData["Title"] = "Order Management";
+    var groupedOrders = Model.OrderHeaders
+        .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+        .OrderByDescending(g => g.Key.Year)
+        .ThenByDescending(g => g.Key.Month);
+}
+
+<section class="cinema-panel admin-orders">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Order Management</h1>
+        </div>
+        <form method="get" class="admin-month-filter">
+            <input type="month" name="month" value="@Model.SelectedMonth" class="form-control" />
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a asp-action="Index" class="btn btn-outline-light">All</a>
+        </form>
+    </div>
+
+    @if (!Model.OrderHeaders.Any())
+    {
+        <div class="empty-state">No orders found for this month.</div>
+    }
+    else
+    {
+        @foreach (var monthGroup in groupedOrders)
+        {
+            <div class="order-month-band">
+                <h2>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthGroup.Key.Month) @monthGroup.Key.Year</h2>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle order-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Order Status</th>
+                                <th>Payment</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in monthGroup)
+                            {
+                                <tr>
+                                    <td>#@order.Id</td>
+                                    <td>
+                                        <strong>@order.Name</strong>
+                                        <span>@order.PhoneNumber</span>
+                                    </td>
+                                    <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                    <td>$@order.OrderTotal.ToString("0.00")</td>
+                                    <td><span class="status-pill">@order.OrderStatus</span></td>
+                                    <td><span class="status-pill payment">@order.PaymentStatus</span></td>
+                                    <td class="text-end">
+                                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</section>
