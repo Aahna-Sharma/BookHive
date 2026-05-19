@@ -36,6 +36,56 @@
     </div>
 
     <div class="admin-table-card">
+        <style>
+                    /* LOCK BUTTON */
+
+                    .lock-btn {
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 12px !important;
+                        border: none !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        background: linear-gradient(135deg, darkorange, darkred ) !important;
+                        color: white !important;
+                        transition: all 0.25s ease !important;
+                        box-shadow: 0 8px 18px rgba(245, 158, 11, 0.18) !important;
+                    }
+
+                        .lock-btn:hover {
+                            transform: translateY(-2px) scale(1.04) !important;
+                            background: linear-gradient(135deg, red, darkred) !important;
+                        }
+
+                    /* UNLOCK BUTTON */
+
+                    .unlock-btn {
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 12px !important;
+                        border: none !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        background: linear-gradient(135deg, #10b981, #059669) !important;
+                        color: white !important;
+                        transition: all 0.25s ease !important;
+                        box-shadow: 0 8px 18px rgba(16, 185, 129, 0.18) !important;
+                    }
+
+                        .unlock-btn:hover {
+                            transform: translateY(-2px) scale(1.04) !important;
+                            background: linear-gradient(135deg, #34d399, #10b981) !important;
+                        }
+
+                        /* ICON SIZE */
+
+                        .lock-btn i,
+                        .unlock-btn i {
+                            font-size: 13px !important;
+                        }
+        </style>
         <table id="tbldata" class="table table-hover admin-data-table w-100">
             <thead>
                 <tr>

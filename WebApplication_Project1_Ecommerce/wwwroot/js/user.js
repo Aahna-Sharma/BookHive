@@ -21,24 +21,40 @@ function loadTableData() {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
                     if (lockout > today) {
-                        //user locked
+
+                        // USER LOCKED → SHOW UNLOCK
+
                         return `
-                        <div class = "text-center">
-                        <a class="btn btn-danger" onclick=LockUnlock('${data.id}')>
-                        Unlock
-                        </a>
-                        </div>
-                        `;
+
+            <div class="d-flex justify-content-center">
+
+                <a class="btn action-btn unlock-btn"
+                   onclick="LockUnlock('${data.id}')">
+
+                    <i class="fas fa-lock-open"></i>
+
+                </a>
+
+            </div>
+            `;
                     }
                     else {
-                        //user unlock
+
+                        // USER UNLOCKED → SHOW LOCK
+
                         return `
-                        <div class = "text-center">
-                        <a class="btn btn-success" onclick=LockUnlock('${data.id}')>
-                        Lock
-                        </a>
-                        </div>
-                        `;
+
+            <div class="d-flex justify-content-center">
+
+                <a class="btn action-btn lock-btn"
+                   onclick="LockUnlock('${data.id}')">
+
+                    <i class="fas fa-lock"></i>
+
+                </a>
+
+            </div>
+            `;
                     }
                 },
               

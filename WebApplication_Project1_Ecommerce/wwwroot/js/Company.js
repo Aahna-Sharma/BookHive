@@ -31,14 +31,25 @@ function loadTableData() {
                 "data": "id",
                 "render": function (data) {
                     return `
-                    <div class="text-center">
-                        <a href="/Admin/Company/Upsert/${data}" class="btn btn-info">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a class="btn btn-danger" onclick="Delete('/Admin/Company/Delete/${data}')">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </div>`;
+                   <div class="d-flex justify-content-center gap-2">
+
+    <!-- EDIT -->
+    <a href="/Admin/Category/Upsert/${data}" 
+       class="btn action-btn edit-btn">
+
+        <i class="fas fa-pen"></i>
+
+    </a>
+
+    <!-- DELETE -->
+    <a onclick="Delete('/Admin/Category/Delete/${data}')"
+       class="btn action-btn delete-btn">
+
+        <i class="fas fa-trash"></i>
+
+    </a>
+
+</div>`;
                 },
                 "width": "40%"
             }

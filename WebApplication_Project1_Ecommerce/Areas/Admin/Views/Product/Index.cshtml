@@ -35,6 +35,64 @@
     </div>
 
     <div class="admin-table-card">
+        <style>
+                    .action-btn {
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 12px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 0 !important;
+                        border: none !important;
+                        transition: all 0.25s ease !important;
+                    }
+
+                    /* spacing between buttons */
+                    .d-flex.gap-2 {
+                        gap: 12px !important;
+                    }
+
+                    /* icons smaller */
+                    .action-btn i {
+                        font-size: 13px !important;
+                    }
+
+                    /* hover */
+                    .action-btn:hover {
+                        transform: translateY(-2px) scale(1.04) !important;
+                    }
+                    /* EDIT */
+                    .edit-btn {
+                        background: linear-gradient(135deg, #0f766e, #115e59) !important;
+                        color: white !important;
+                        box-shadow: 0 8px 18px rgba(15, 118, 110, 0.18) !important;
+                    }
+
+                        .edit-btn:hover {
+                            transform: translateY(-3px) scale(1.06) !important;
+                            background: linear-gradient(135deg, #14b8a6, #0f766e) !important;
+                            color: white !important;
+                        }
+
+                    /* DELETE */
+                    .delete-btn {
+                        background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+                        color: white !important;
+                        box-shadow: 0 8px 18px rgba(220, 38, 38, 0.18) !important;
+                    }
+
+                        .delete-btn:hover {
+                            transform: translateY(-3px) scale(1.06) !important;
+                            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+                            color: white !important;
+                        }
+
+                    /* ICONS */
+                    .action-btn i {
+                        font-size: 15px !important;
+                    }
+        </style>
         <table id="tbldata" class="table table-hover admin-data-table w-100">
             <thead>
                 <tr>

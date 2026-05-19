@@ -1,6 +1,146 @@
 @{
     ViewData["Title"] = "Privacy Policy";
 }
+    <style >
+        /* PRIVACY PAGE */
+        .privacy-page {
+            padding: 50px;
+            border-radius: 28px;
+            background: linear-gradient( 135deg, #0f172a, #132238, #0b554f );
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* subtle glow */
+
+        .privacy-page::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 280px;
+            height: 280px;
+            background: rgba(20,184,166,0.15);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        /* EYEBROW */
+
+        .privacy-page .eyebrow {
+            color: #facc15;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 14px;
+        }
+
+        /* TITLE */
+
+        .privacy-page h1 {
+            font-size: 52px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+            max-width: 720px;
+            margin-bottom: 22px;
+            letter-spacing: -1.4px;
+        }
+
+        /* LEAD */
+
+        .privacy-lead {
+            font-size: 18px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.78);
+            max-width: 760px;
+            margin-bottom: 50px;
+        }
+
+        /* GRID */
+
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        /* BLOCK */
+
+        .privacy-block {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            /* hover */
+
+            .privacy-block:hover {
+                transform: translateY(-6px);
+                background: rgba(255,255,255,0.12);
+                border-color: rgba(255,255,255,0.14);
+                box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+            }
+
+            /* icon */
+
+            .privacy-block i {
+                width: 62px;
+                height: 62px;
+                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                background: linear-gradient( 135deg, #14b8a6, #06b6d4 );
+                color: white;
+                margin-bottom: 22px;
+                box-shadow: 0 12px 24px rgba(20,184,166,0.25);
+            }
+
+            /* heading */
+
+            .privacy-block h2 {
+                color: #ffffff;
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 12px;
+            }
+
+            /* paragraph */
+
+            .privacy-block p {
+                color: rgba(255,255,255,0.72);
+                line-height: 1.8;
+                font-size: 15px;
+                margin: 0;
+            }
+
+        /* MOBILE */
+
+        @@media (max-width: 768px) {
+
+            .privacy-page {
+                padding: 35px 24px;
+            }
+
+                .privacy-page h1 {
+                    font-size: 38px;
+                }
+
+            .privacy-lead {
+                font-size: 16px;
+            }
+        }
+
+
+</style>
 
 <section class="privacy-page cinema-panel">
     <p class="eyebrow">BookHive Privacy</p>

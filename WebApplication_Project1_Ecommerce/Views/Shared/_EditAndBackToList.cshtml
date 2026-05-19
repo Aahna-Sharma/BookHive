@@ -1,8 +1,26 @@
-﻿<div class="row">
+﻿<style>
+    .custom-btn {
+        border: 1px solid white;
+        color: white;
+        background-color: #0f4c5c;
+        text-decoration: none;
+        padding: 10px 30px;
+        transition: all 0.3s ease;
+    }
+
+        .custom-btn:hover {
+            border: 1px solid black;
+            color: white !important;
+            background-color: darkcyan !important;
+            transform: translateY(-2px);
+            box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 12px 10px;
+        }
+</style>
+<div class="row">
     <div class="col">
-        <button class="btn btn-info form-control" type="submit">Update</button>
+        <button class="btn btn-info form-control custom-btn" type="submit">Update</button>
     </div>
     <div class="col">
-        <a class="btn btn-success form-control" asp-action="Index">Back To List</a>
+        <a class="btn btn-success form-control custom-btn" asp-action="Index">Back To List</a>
     </div>
 </div>

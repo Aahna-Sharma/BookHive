@@ -4,6 +4,22 @@
     ViewData["Title"] = "My Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
+<style>
+    .savechng{
+        border: 1px solid white;
+        align-content: center;
+        color: white;
+        background-color: #0f4c5c;
+        text-decoration: none;
+        padding: 10px 30px;
+    }
+    .savechng:hover{
+        border: 1px solid black;
+        align-content: center;
+        color: black;
+        background-color: darkcyan;
+    }
+</style>
 
 <div class="container py-4">
 
@@ -64,7 +80,7 @@
                         <div class="d-grid">
                             <button id="update-profile-button"
                                     type="submit"
-                                    class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                                    class="btn btn-lg rounded-3 fw-semibold savechng">
                                 Save Changes
                             </button>
                         </div>

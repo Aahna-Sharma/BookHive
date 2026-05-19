@@ -14,11 +14,104 @@
             <p class="eyebrow">Admin</p>
             <h1>Order Management</h1>
         </div>
-        <form method="get" class="admin-month-filter">
-            <input type="month" name="month" value="@Model.SelectedMonth" class="form-control" />
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a asp-action="Index" class="btn btn-outline-light">All</a>
-        </form>
+        <style>
+
+                    .orders-filter-bar {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+
+                        /* MONTH INPUT */
+
+                        .orders-filter-bar input[type="month"] {
+                            height: 42px;
+                            width: 170px;
+                            border: none;
+                            border-radius: 10px;
+                            background: rgba(255,255,255,0.95);
+                            padding: 0 12px;
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #132238;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                            transition: all 0.2s ease;
+                        }
+
+                            .orders-filter-bar input[type="month"]:focus {
+                                outline: none;
+                                box-shadow: 0 0 0 3px rgba(20,184,166,0.12);
+                            }
+
+                    /* FILTER BUTTON */
+
+                    .filter-btn {
+                        height: 42px;
+                        padding: 0 16px;
+                        border: none;
+                        border-radius: 10px;
+                        background: #0f766e;
+                        color: white !important;
+                        font-size: 14px;
+                        font-weight: 600;
+                        transition: all 0.2s ease;
+                    }
+
+                        .filter-btn:hover {
+                            background: #14b8a6;
+                            transform: translateY(-1px);
+                        }
+
+                    /* ALL BUTTON */
+
+                    .all-btn {
+                        height: 42px;
+                        padding: 0 16px;
+                        border-radius: 10px;
+                        border: 1px solid rgba(255,255,255,0.45);
+                        background: rgba(255,255,255,0.20);
+                        color: white !important;
+                        font-size: 14px;
+                        font-weight: 600;
+                        transition: all 0.2s ease;
+                        align-content:center;
+                    }
+
+                        .all-btn:hover {
+                            background: rgba(255,255,255,0.18);
+                            transform: translateY(-1px);
+                        }
+        </style>
+
+        <div class="orders-filter-bar">
+            
+            <form method="get"
+                  asp-action="Index"
+                  class="orders-filter-bar">
+
+                <input type="month"
+                       name="month"
+                       value="@Model.SelectedMonth" />
+
+                <button type="submit"
+                        class="btn filter-btn">
+
+                    <i class="fas fa-filter me-1"></i>
+                    Filter
+
+                </button>
+
+                <a asp-action="Index"
+                   class="btn all-btn">
+
+                    <i class="fas fa-layer-group me-1"></i>
+                    All
+
+                </a>
+
+            </form>
+
+        </div>
     </div>
 
     @if (!Model.OrderHeaders.Any())
@@ -30,9 +123,142 @@
         @foreach (var monthGroup in groupedOrders)
         {
             <div class="order-month-band">
+                <style>
+                            /* TABLE CONTAINER */
+
+                            .order-table {
+                                border-radius: 18px;
+                                overflow: hidden;
+                                border: none;
+                                background: #2f3640;
+                            }
+
+                                /* HEADER */
+
+                                .order-table thead {
+                                    background: linear-gradient(90deg, #1f2937, #374151);
+                                }
+
+                                    .order-table thead th {
+                                        border: none !important;
+                                        padding: 18px 16px !important;
+                                        font-size: 14px;
+                                        font-weight: 700;
+                                        color: #ffffff;
+                                        letter-spacing: 0.3px;
+                                    }
+
+                                /* BODY */
+
+                                .order-table tbody tr {
+                                    transition: all 0.25s ease;
+                                    border-bottom: 1px solid rgba(255,255,255,0.05);
+                                }
+
+                                    /* ROW HOVER */
+
+                                    .order-table tbody tr:hover {
+                                        background: rgba(255,255,255,0.04);
+                                        transform: scale(1.002);
+                                    }
+
+                                /* CELLS */
+
+                                .order-table td {
+                                    padding: 18px 16px !important;
+                                    vertical-align: middle;
+                                    border: none !important;
+                                }
+
+                                    /* CUSTOMER */
+
+                                    .order-table td strong {
+                                        color: #ffffff;
+                                        font-weight: 700;
+                                    }
+
+                                    .order-table td span:not(.status-pill) {
+                                        display: block;
+                                        font-size: 13px;
+                                        color: #9ca3af;
+                                        margin-top: 2px;
+                                    }
+                            /* STATUS PILLS */
+
+                            .status-pill {
+                                display: inline-flex;
+                                align-items: center;
+                                padding: 7px 14px;
+                                border-radius: 999px;
+                                font-size: 12px;
+                                font-weight: 700;
+                                letter-spacing: 0.2px;
+                            }
+
+                                /* APPROVED */
+
+                                .status-pill.approved {
+                                    background: rgba(16,185,129,0.14);
+                                    color: #34d399;
+                                }
+
+                                /* PENDING */
+
+                                .status-pill.pending {
+                                    background: rgba(245,158,11,0.14);
+                                    color: #fbbf24;
+                                }
+
+                                /* CANCELLED */
+
+                                .status-pill.cancelled {
+                                    background: rgba(239,68,68,0.14);
+                                    color: #f87171;
+                                }
+
+                                /* REFUNDED */
+
+                                .status-pill.refunded {
+                                    background: rgba(96,165,250,0.14);
+                                    color: #60a5fa;
+                                }
+                                .status-pill.rejected {
+                                    background: rgba(96,165,250,0.14);
+                                    color: bisque;
+                                }
+
+                            /* DETAILS BUTTON */
+
+                            .order-table .btn-outline-info {
+                                border-radius: 12px;
+                                padding: 8px 16px;
+                                font-size: 13px;
+                                font-weight: 700;
+                                border: 1px solid rgba(34,211,238,0.35);
+                                color: #22d3ee;
+                                transition: all 0.25s ease;
+                            }
+
+                                .order-table .btn-outline-info:hover {
+                                    background: #06b6d4;
+                                    color: white;
+                                    transform: translateY(-1px);
+                                    box-shadow: 0 10px 22px rgba(6,182,212,0.22);
+                                }
+
+                            /* MONTH HEADING */
+
+                            .order-month-band h2 {
+                                font-size: 48px;
+                                font-weight: 800;
+                                margin-bottom: 18px;
+                                color: #111827;
+                                letter-spacing: -1px;
+                            }
+                </style>
                 <h2>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(monthGroup.Key.Month) @monthGroup.Key.Year</h2>
                 <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle order-table">
+                    <table class="table table-dark table-hover align-middle order-table" >
                         <thead>
                             <tr>
                                 <th>Order</th>
@@ -55,10 +281,18 @@
                                     </td>
                                     <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
                                     <td>$@order.OrderTotal.ToString("0.00")</td>
-                                    <td><span class="status-pill">@order.OrderStatus</span></td>
-                                    <td><span class="status-pill payment">@order.PaymentStatus</span></td>
+                                    <td>
+                                        <span class="status-pill @order.OrderStatus.ToLower()">
+                                            @order.OrderStatus
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-pill @order.PaymentStatus.ToLower()">
+                                            @order.PaymentStatus
+                                        </span>
+                                    </td>
                                     <td class="text-end">
-                                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-outline-info" style="align-content:center">Details</a>
                                     </td>
                                 </tr>
                             }

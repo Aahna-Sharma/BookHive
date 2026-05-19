@@ -469,7 +469,7 @@ namespace WebApplication_Project1_Ecommerce.Areas.Customer.Controllers
                 var voiceMessage =
      $"Hello {orderHeader.Name}. Your order number {orderHeader.Id} has been confirmed successfully. Your payment was received and your books will be delivered soon. Thank you for choosing BookHive.";
                 var twiml =
-                    $"<Response><Say voice=\"alice\">{HtmlEncoder.Default.Encode(voiceMessage)}</Say></Response>";
+                    $"<Response><Say voice=\"Polly.Aditi\">{HtmlEncoder.Default.Encode(voiceMessage)}</Say></Response>";
 
                 var call = CallResource.Create(
                     to: new PhoneNumber(customerPhoneNumber),
