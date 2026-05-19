@@ -38,8 +38,8 @@ builder.Services.ConfigureApplicationCookie(Options =>
 
 builder.Services.AddAuthentication().AddFacebook(options =>
 {
-    options.AppId = "1539686324385042";
-    options.AppSecret = "cc0de4a65023c52a8a7c240bce287863";
+    options.AppId = "";
+    options.AppSecret = "";
     options.Events.OnRemoteFailure = context =>
     {
         context.Response.Redirect("/Identity/Account/Register");
@@ -49,14 +49,14 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 });
 builder.Services.AddAuthentication().AddGoogle(options =>
 {
-    options.ClientId = "1055187770177-rr5a3jrjudv889hfg6v7g41fqq7ce912.apps.googleusercontent.com";
-    options.ClientSecret = "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";
+    options.ClientId = "";
+    options.ClientSecret = "";
 });
 
 builder.Services.AddAuthentication().AddTwitter(options =>
 {
-    options.ConsumerKey = "9NV6pe9GOdpWoaCjT4dC28umT";
-    options.ConsumerSecret = "AfMn49pBVf94czFzvSl3fttENuavke39chBRwgQMufu15qEr7S";
+    options.ConsumerKey = "";
+    options.ConsumerSecret = "";
     
 });
 
