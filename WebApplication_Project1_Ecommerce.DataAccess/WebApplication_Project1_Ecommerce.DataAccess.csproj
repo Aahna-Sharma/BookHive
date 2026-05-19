@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-  <!--  <Nullable>enable</Nullable>-->
-  </PropertyGroup>
- <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="3.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
-  </ItemGroup>
- <ItemGroup>
-   <ProjectReference Include="..\WebApplication_Project1_Ecommerce.Models\WebApplication_Project1_Ecommerce.Models.csproj" />
-   <ProjectReference Include="..\WebApplication_Project1_Ecommerce.Utility\WebApplication_Project1_Ecommerce.Utility.csproj" />
- </ItemGroup>	
-	
-  
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<!--<Nullable>enable</Nullable>-->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DocumentFormat.OpenXml" Version="3.4.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WebApplication_Project1_Ecommerce.Models\WebApplication_Project1_Ecommerce.Models.csproj" />
+		<ProjectReference Include="..\WebApplication_Project1_Ecommerce.Utility\WebApplication_Project1_Ecommerce.Utility.csproj" />
+	</ItemGroup>
 
 </Project>

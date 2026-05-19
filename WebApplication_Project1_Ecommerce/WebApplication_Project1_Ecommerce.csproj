@@ -1,38 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-	  <TargetFramework>net10.0</TargetFramework>
-    <!--<Nullable>enable</Nullable>-->
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-WebApplication_Project1_Ecommerce-339fdffe-6ff6-42c6-ba1e-093c315cd5b9</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<!--<Nullable>enable</Nullable>-->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>aspnet-WebApplication_Project1_Ecommerce-339fdffe-6ff6-42c6-ba1e-093c315cd5b9</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
-    <PackageReference Include="NuGet.Packaging" Version="7.3.1" />
-    <PackageReference Include="NuGet.Protocol" Version="7.3.1" />
-    <PackageReference Include="Stripe.net" Version="51.0.0" />
-    <PackageReference Include="Twilio" Version="7.14.9" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebApplication_Project1_Ecommerce.DataAccess\WebApplication_Project1_Ecommerce.DataAccess.csproj" />
-    <ProjectReference Include="..\WebApplication_Project1_Ecommerce.Models\WebApplication_Project1_Ecommerce.Models.csproj" />
-    <ProjectReference Include="..\WebApplication_Project1_Ecommerce.Utility\WebApplication_Project1_Ecommerce.Utility.csproj" />
-  </ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\products\" />
-  </ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.3" />
+
+		<PackageReference Include="NuGet.Packaging" Version="7.3.1" />
+		<PackageReference Include="NuGet.Protocol" Version="7.3.1" />
+
+		<PackageReference Include="Stripe.net" Version="51.0.0" />
+		<PackageReference Include="Twilio" Version="7.14.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WebApplication_Project1_Ecommerce.DataAccess\WebApplication_Project1_Ecommerce.DataAccess.csproj" />
+		<ProjectReference Include="..\WebApplication_Project1_Ecommerce.Models\WebApplication_Project1_Ecommerce.Models.csproj" />
+		<ProjectReference Include="..\WebApplication_Project1_Ecommerce.Utility\WebApplication_Project1_Ecommerce.Utility.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\images\products\" />
+	</ItemGroup>
 
 </Project>

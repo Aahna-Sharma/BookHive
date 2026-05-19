@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Dockerfile.txt" />
+  </Folder>
   <Project Path="WebApplication_Project1_Ecommerce.DataAccess/WebApplication_Project1_Ecommerce.DataAccess.csproj" />
   <Project Path="WebApplication_Project1_Ecommerce.Models/WebApplication_Project1_Ecommerce.Models.csproj" />
   <Project Path="WebApplication_Project1_Ecommerce.Utility/WebApplication_Project1_Ecommerce.Utility.csproj" />

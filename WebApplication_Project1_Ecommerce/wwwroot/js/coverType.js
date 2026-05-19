@@ -18,7 +18,7 @@ function loadTableData() {
                     <div class="d-flex justify-content-center gap-2">
 
     <!-- EDIT -->
-    <a href="/Admin/Category/Upsert/${data}" 
+    <a href="/Admin/coverType/Upsert/${data}" 
        class="btn action-btn edit-btn">
 
         <i class="fas fa-pen"></i>
@@ -26,7 +26,7 @@ function loadTableData() {
     </a>
 
     <!-- DELETE -->
-    <a onclick="Delete('/Admin/Category/Delete/${data}')"
+    <a onclick="Delete('/Admin/coverType/Delete/${data}')"
        class="btn action-btn delete-btn">
 
         <i class="fas fa-trash"></i>
