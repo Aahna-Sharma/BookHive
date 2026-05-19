@@ -1,12 +1,183 @@
 @model int;
 
-<section class="order-confirmation cinema-panel">
-    <div class="confirmation-mark">
-        <i class="fa-solid fa-check"></i>
+<style>
+    .order-confirmation-page {
+        min-height: 85vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f8fbff, #eef5ff);
+        padding: 40px 20px;
+    }
+
+    .confirmation-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 700px;
+        border-radius: 28px;
+        padding: 55px 45px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .confirmation-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #0b554f, #132238);
+        }
+
+    .success-icon {
+        width: 95px;
+        height: 95px;
+        border-radius: 50%;
+        background: #ecfdf5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        border: 2px solid #d1fae5;
+    }
+
+        .success-icon i {
+            font-size: 42px;
+            color: #16a34a;
+        }
+
+    .confirmation-badge {
+        display: inline-block;
+        background: #eefaf7;
+        color: #0b554f;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 8px 18px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 18px;
+    }
+
+    .confirmation-card h1 {
+        font-size: 42px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 14px;
+    }
+
+    .confirmation-subtext {
+        font-size: 16px;
+        color: #6b7280;
+        line-height: 1.8;
+        max-width: 540px;
+        margin: 0 auto 28px;
+    }
+
+    .order-box {
+        background: #f8fafc;
+        border: 1px solid #edf2f7;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .order-label {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+
+    .order-number {
+        font-size: 28px;
+        font-weight: 800;
+        color: #132238;
+    }
+
+    .continue-btn {
+        background: #132238;
+        color: #ffffff !important;
+        border: none;
+        border-radius: 14px;
+        padding: 14px 42px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+        .continue-btn:hover {
+            background: #0b554f;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(11, 85, 79, 0.12);
+        }
+
+    .extra-note {
+        margin-top: 22px;
+        font-size: 14px;
+        color: #9ca3af;
+    }
+
+    @@media (max-width: 768px) {
+        .confirmation-card {
+            padding: 40px 24px;
+        }
+
+            .confirmation-card h1 {
+                font-size: 30px;
+            }
+
+        .order-number {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<section class="order-confirmation-page">
+
+    <div class="confirmation-card">
+
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <div class="confirmation-badge">
+            Order Confirmed
+        </div>
+
+        <h1>Your Books Are On The Way</h1>
+
+        <p class="confirmation-subtext">
+            Thank you for shopping with BookHive.
+            Your payment was successful, your invoice has been emailed,
+            and your order is now being prepared for delivery.
+        </p>
+
+        <div class="order-box">
+            <div class="order-label">
+                Your Order Number
+            </div>
+
+            <div class="order-number">
+                #@Model
+            </div>
+        </div>
+
+        <a asp-area="Customer"
+           asp-controller="Home"
+           asp-action="Index"
+           class="continue-btn">
+            Continue Shopping
+        </a>
+
+        <div class="extra-note">
+            You will also receive SMS and call updates regarding your delivery.
+        </div>
+
     </div>
-    <p class="eyebrow">Order confirmed</p>
-    <h1>Your books are on the way.</h1>
-    <p>Thank you for your order. Your invoice has been emailed with the full order details.</p>
-    <div class="confirmation-number">Order #@Model</div>
-    <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+
 </section>

@@ -1,12 +1,37 @@
+<style>
+    .addbtn {
+        border: 1px solid white;
+        align-content: center;
+        color: white;
+        background-color: #0f4c5c;
+        text-decoration: none;
+        padding: 10px 30px;
+    }
+
+        .addbtn:hover {
+            border: 1px solid black;
+            align-content: center;
+            color: black;
+            background-color: darkcyan;
+        }
+</style>
+
 <section class="admin-page-shell">
     <div class="admin-page-header">
         <div>
             <p class="eyebrow">Member Management</p>
-            <h1>Users</h1>
+            <h1 style=" color: #ffffff;
+                letter-spacing: -0.5px;
+                /* strong layered text shadow for contrast */
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.12), 0 12px 24px rgba(0, 0, 0, 0.10);
+                /* subtle stroke effect */
+                -webkit-text-stroke: 0.4px rgba(19, 34, 56, 0.25);">
+                Users
+            </h1>
             <p>Review customers, roles, company links, and account status.</p>
         </div>
-        <a asp-page="/Account/Register" asp-area="Identity" class="btn btn-primary">
-            <i class="fas fa-plus"></i>&nbsp;Add User
+        <a asp-page="/Account/Register" asp-area="Identity" class="btn addbtn">
+            <i class="fas fa-plus"></i>&nbsp;&nbsp;Add User
         </a>
     </div>
 

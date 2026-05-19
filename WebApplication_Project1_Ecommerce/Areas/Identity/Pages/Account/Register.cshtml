@@ -5,11 +5,56 @@
     ViewData["Title"] = "Register";
 }
 <style>
+    /* MOVE EMAIL + PASSWORD PLACEHOLDER TEXT SLIGHTLY HIGHER */
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        padding-top: 1.8rem !important;
+        padding-bottom: 0.6rem !important;
+        height: calc(3.8rem + 2px);
+    }
+
+    /* Label position */
+    .form-floating > label {
+        padding: 0.8rem 0.75rem !important;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
+
+    /* When typing/focused */
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        transform: scale(.85) translateY(-0.7rem) translateX(0.15rem) !important;
+        color: #0d6efd;
+    }
+
     .external-login-row {
         display: flex;
         flex-direction: column;
         gap: 14px;
         margin-top: 20px;
+    }
+
+    .reg-btn{
+        align-items: center;
+        background: #0b554f;
+        border: 1px solid black;
+        border-radius: 8px;
+        box-shadow: -10px -10px 30px 0 #fff,10px 10px 30px 0 #1d0dca17;
+        color: #ffffff;
+    }
+
+    .reg-btn:hover {
+        background: #f8f8ff;
+        box-shadow: rgba(15, 107, 100, 0.07) 0px 1px 2px, rgba(15, 107, 100, 0.07) 0px 2px 4px, rgba(15, 107, 100, 0.07) 0px 4px 8px, rgba(15, 107, 100, 0.07) 0px 8px 16px, rgba(15, 107, 100, 0.07) 0px 16px 32px, rgba(15, 107, 100, 0.07) 0px 32px 64px;
+        color: black;
+    }
+
+    @@media (min-width: 768px) {
+        .reg-btn {
+            padding: 24px;
+        }
     }
 
     .social-btn {
@@ -31,7 +76,9 @@
 
         .social-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075), 0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075), 0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
+          
+
         }
 
         .social-btn i {
@@ -71,7 +118,11 @@
 
     <div class="auth-card register-card">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <p class="eyebrow">New account</p>
+            <p style="font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            margin-bottom: 6px !important;
+            text-transform: uppercase;color:#ffb703;">New account</p>
             <h2>Create account</h2>
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-grid">
@@ -142,7 +193,7 @@
                 </div>
             }
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary reg-btn" style="font-size:16px;"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;&nbsp;Register</button>
         </form>
 
         @if ((Model.ExternalLogins?.Count ?? 0) > 0)

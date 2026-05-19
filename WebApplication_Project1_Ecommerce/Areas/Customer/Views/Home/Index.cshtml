@@ -9,7 +9,321 @@
     var fallbackImage = Url.Content("~" + ProductImageHelper.FallbackProductImageUrl);
 }
 
-<section class="home-hero">
+<style>
+   
+    .home-hero {
+        background: linear-gradient(-45deg, #f6c453, #0f9f6e, #23a6d5,#083c3a, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        border-radius: 28px;
+        padding: 60px;
+        margin-bottom: 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+        transition: 0.35s ease;
+    }
+
+    @@keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .home-hero:hover {
+        transform: translateY(-4px);
+    }
+
+    .storefront-kicker {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0d6efd;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+    }
+
+    /* LEFT TO RIGHT TEXT ANIMATION FOR HERO SECTION */
+
+    .home-hero h1 {
+        font-size: 52px;
+        font-weight: 900;
+        color: #ffffff;
+        line-height: 1.2;
+        margin-bottom: 18px;
+        letter-spacing: -0.5px;
+        /* strong layered text shadow for contrast */
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.12), 0 12px 24px rgba(0, 0, 0, 0.10);
+        /* subtle stroke effect */
+        -webkit-text-stroke: 0.4px rgba(19, 34, 56, 0.25);
+        /* animation */
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideRightHero 1s ease forwards;
+    }
+
+
+    .home-hero p {
+        font-size: 17px;
+        color: #5f6368;
+        line-height: 1.8;
+        max-width: 560px;
+        /* animation */
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideRightHero 1s ease forwards;
+        animation-delay: 0.3s;
+    }
+
+    @@keyframes slideRightHero {
+        from {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    /* Hero Button */
+    .home-hero .btn-warning {
+        background: #132238;
+        border: none;
+        color: #fff;
+        padding: 14px 34px;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+        .home-hero .btn-warning:hover {
+            background: rgba(24, 32, 29, 0.23);
+            border: 2px solid rgba(255, 255, 255, 0.96);
+            
+            color: #ffffff;
+            
+        }
+
+    /* Featured Card */
+    .featured-book-panel {
+        background-color: rgba(255,255,255, 0.34);
+        padding: 24px;
+        border-radius: 24px;
+        width: 400px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+        transition: 0.3s;
+        color: black;
+    }
+
+        .featured-book-panel:hover {
+            transform: scale(1.02);
+        }
+
+    .featured-label {
+        display: inline-block;
+        
+        color: #0d6efd;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        box-shadow: rgb(0,0,0, 0.15) 3px 3px 6px 0px inset, rgba(0, 0, 0, 0.05) -3px -3px 6px 1px inset;
+    }
+
+    .featured-book-panel img {
+        width: 100%;
+        height: 290px;
+        object-fit: cover;
+        border-radius: 12px;
+
+    }
+
+    /* Filter Bar */
+    .home-filter-bar {
+        background: white;
+        border-radius: 20px;
+        
+        margin-bottom: 35px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    }
+
+    .filter-field label {
+        font-weight: 600;
+        color: #222;
+       padding:0px;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        
+        box-shadow: none !important;
+    }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+        }
+
+    /* Product Cards */
+    .home-product-card {
+        background: white;
+        border: none;
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
+        transition: 0.35s ease;
+        overflow: hidden;
+    }
+
+        .home-product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+        }
+   
+    /* FIX BOOK IMAGES INSIDE PRODUCT CARDS */
+
+    .product-cover-wrap {
+        background: #ffffff;
+        border-radius: 20px;
+       
+        height: 340px; /* fixed taller container */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    /* Better image fitting */
+    .product-cover {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain; /* keeps full book visible */
+        display: block;
+        transition: transform 0.35s ease;
+    }
+
+    /* Smooth hover zoom */
+    .home-product-card:hover .product-cover {
+        transform: scale(1.06);
+    }
+
+    /* Make cards more balanced */
+    .home-product-card {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Optional: improve image frame look */
+    .product-cover-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        pointer-events: none;
+    }
+    /* Product Title */
+    .product-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    .product-author {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 14px;
+    }
+
+    /* Price */
+    .product-price {
+        color: #132238;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    /* View Details Button */
+    .home-product-card .btn-primary {
+        background: #132238;
+        border: none;
+        border-radius: 14px;
+        height: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .home-product-card .btn-primary:hover {
+            background: linear-gradient(-45deg, #0f9f6e, #23a6d5, #083c3a);
+            
+            animation: gradient 15s ease infinite;
+           border: 1px solid black;
+           
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+            transition: 0.35s ease;
+        }
+
+    @@keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        100% {
+            background-position: 100% 50%;
+        }
+
+    }
+
+    /* Popular Badge */
+    .popular-badge {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: #ff6b35;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    /* Responsive */
+    
+    @@media (max-width: 991px) {
+        .home-hero {
+            flex-direction: column;
+            padding: 35px;
+        }
+
+            .home-hero h1 {
+                font-size: 38px;
+            }
+
+        .featured-book-panel {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="home-hero homes">
     <div class="home-hero-content">
         <p class="storefront-kicker">BookHive collections</p>
         <h1>Discover books with a little more electricity.</h1>
@@ -99,7 +413,7 @@
 
                 <a asp-action="Details"
                    asp-route-id="@product.Id"
-                   class="btn btn-primary form-control mt-auto">
+                   class="btn btn-primary form-control mt-auto text-white align-content-center">
                     View Details
                 </a>
             </article>

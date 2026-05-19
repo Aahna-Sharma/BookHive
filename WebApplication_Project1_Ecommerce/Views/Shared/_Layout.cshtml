@@ -24,12 +24,187 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        
+        .shop-navbar {
+        background: linear-gradient(135deg, #0f4c5c, #1b4965);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        padding: 14px 0;
+        border-bottom: none;
+        }
+
+        /* Logo */
+        .shop-navbar .navbar-brand {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #ffffff !important;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        }
+
+        .shop-navbar .navbar-brand i {
+        color: #ffd166;
+        font-size: 1.5rem;
+        }
+
+        .shop-navbar .navbar-brand:hover {
+        color: #ffd166 !important;
+        }
+
+        /* Nav Links */
+        .shop-navbar .nav-link {
+        color: #f8f9fa !important;
+        font-weight: 500;
+        font-size: 15px;
+        padding: 10px 16px !important;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+        }
+
+        /* Hover */
+        .shop-navbar .nav-link:hover {
+        color: #ffd166 !important;
+        background: rgba(255, 255, 255, 0.08);
+        }
+
+
+        /* Active Dropdown */
+        .ordermgt{
+        color: #ffffff !important;
+        font-weight: 600;
+        background: rgba(255,255,255, 0.14);
+        box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+        }
+        .shop-navbar .nav-link.dropdown-toggle.active {
+        color: #ffffff !important;
+        font-weight: 600;
+        background: rgba(255,255,255, 0.14);
+        box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+        }
+
+        .shop-navbar .nav-link.dropdown-toggle.active:hover {
+        color: #ffd166 !important; /* yellow text */
+        background: rgba(255, 255, 255, 0.14);
+        box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+        transform: translateY(-2px); /* move slightly upward */
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        }
+
+        /* Dropdown Menu */
+        .shop-navbar .dropdown-menu {
+        border: none;
+        border-radius: 14px;
+        padding: 10px;
+        margin-top: 10px;
+        background: #ffffff;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        }
+
+        /* Dropdown Items */
+        .shop-navbar .dropdown-item {
+        color: #2c3e50;
+        font-weight: 500;
+        padding: 10px 14px;
+        border-radius: 10px;
+        transition: all 0.25s ease;
+        }
+
+       
+
+        .shop-navbar .dropdown-item:hover {
+        background: #f1f7ff;
+        color: #0d6efd;
+        }
+
+        /* Cart */
+        .shop-navbar .fa-shopping-cart {
+        color: #ffd166;
+        font-size: 16px;
+        }
+
+        /* User Icon */
+        .shop-navbar .fa-user {
+        color: #ffd166;
+        margin-right: 6px;
+        }
+
+        /* Logout Button */
+        /* FIX LOGOUT BUTTON VISIBILITY */
+
+        .shop-navbar .btn-link.nav-link {
+        color: #ffffff !important;
+        font-weight: 600;
+        text-decoration: none;
+        background: transparent;
+        border: none;
+        padding: 10px 16px !important;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        }
+
+        /* Hover Effect */
+        .shop-navbar .btn-link.nav-link:hover {
+        color: #ffd166 !important;
+        background: rgba(255, 255, 255, 0.08);
+        }
+
+
+        /* Focus */
+        .shop-navbar .btn-link.nav-link:focus {
+        box-shadow: none;
+        outline: none;
+        }
+
+        /* Register + Login */
+        .shop-navbar .nav-item a {
+        letter-spacing: 0.2px;
+        }
+
+        /* Mobile Toggle */
+        .shop-navbar .navbar-toggler {
+        border: none;
+        box-shadow: none !important;
+        }
+
+        .shop-navbar .navbar-toggler:focus {
+        box-shadow: none;
+        }
+
+        .shop-navbar .navbar-toggler-icon {
+        filter: brightness(0) invert(1);
+        }
+
+        /* Mobile View */
+        @@media (max-width: 991px) {
+        .shop-navbar .navbar-collapse {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        padding: 15px;
+        border-radius: 14px;
+        margin-top: 12px;
+        }
+
+        .shop-navbar .nav-link {
+        padding: 12px !important;
+        }
+
+        .shop-navbar .dropdown-menu {
+        box-shadow: none;
+        border: none;
+        }
+        }
+    </style>
 </head>
 
 <body>
 
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark shop-navbar">
+        <nav class="navbar navbar-expand-sm shop-navbar">
             <div class="container-fluid">
 
                 <!-- Logo -->
@@ -128,7 +303,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-light"
+                                <a class="nav-link text-light ordermgt"
                                    asp-area="Admin"
                                    asp-controller="Order"
                                    asp-action="Index">
